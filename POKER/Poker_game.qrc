@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="Poker_game">
+    <file>inima_neagra.png</file>
+    <file>inima_rosie.png</file>
+    <file>romb.png</file>
+    <file>trefla.png</file>
+    <file>sageti.png</file>
+    <file>spate_carte.jpg</file>
+  </qresource>
+</RCC>
