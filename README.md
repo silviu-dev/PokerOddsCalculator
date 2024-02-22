@@ -35,9 +35,16 @@ This project is a pre-flop odds calculator for the game of Texas Hold'em, which 
 1. The application provides strategic instructions based on the calculated odds.
 2. The odds are automatically calculated and displayed on the right side of the screen below the strategic information.
 
+![SS1](https://github.com/silviu-dev/PokerOddsCalculator/assets/56478018/05d4841d-e014-475e-a473-9eb3a93a75b7)
+
 ### Changing the Number of Players
 1. By default, the application calculates odds for two players.
 2. To calculate odds for more than two players,  use the arrows up or down. (The number of opponents is represented by the number of pairs of cards turned over on the screen.)
+
+![ss2](https://github.com/silviu-dev/PokerOddsCalculator/assets/56478018/443cd56f-3a79-4e0f-a6c0-79dc20dce932)
+
+### Reset
+To reset the current session press space
 
 ## System Requirements
 - Qt 6.x
