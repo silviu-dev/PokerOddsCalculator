@@ -46,7 +46,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Probabiliate castig</string>
+     <string>Winn9ing probability</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -65,7 +65,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Probabiliate egal</string>
+     <string>Tie probability</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">

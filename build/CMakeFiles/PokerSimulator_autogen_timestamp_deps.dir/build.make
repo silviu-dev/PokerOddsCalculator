@@ -66,8 +66,8 @@ include CMakeFiles/PokerSimulator_autogen_timestamp_deps.dir/compiler_depend.mak
 # Include the progress variables for this target.
 include CMakeFiles/PokerSimulator_autogen_timestamp_deps.dir/progress.make
 
-CMakeFiles/PokerSimulator_autogen_timestamp_deps: /home/silviu/Qt/Tools/QtDesignStudio/qt6_design_studio_reduced_version/./libexec/uic
 CMakeFiles/PokerSimulator_autogen_timestamp_deps: /home/silviu/Qt/Tools/QtDesignStudio/qt6_design_studio_reduced_version/./libexec/moc
+CMakeFiles/PokerSimulator_autogen_timestamp_deps: /home/silviu/Qt/Tools/QtDesignStudio/qt6_design_studio_reduced_version/./libexec/uic
 CMakeFiles/PokerSimulator_autogen_timestamp_deps: /home/silviu/Qt/Tools/QtDesignStudio/qt6_design_studio_reduced_version/lib/libQt6Widgets.so.6.6.2
 
 PokerSimulator_autogen_timestamp_deps: CMakeFiles/PokerSimulator_autogen_timestamp_deps

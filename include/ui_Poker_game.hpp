@@ -45,7 +45,7 @@ public:
         label->setStyleSheet(QString::fromUtf8("image: url(./forms/sageti.png);"));
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(510, 300, 141, 21));
+        label_2->setGeometry(QRect(510, 300, 155, 21));
         QFont font;
         font.setFamily(QString::fromUtf8("Times New Roman"));
         font.setPointSize(14);
@@ -79,8 +79,8 @@ public:
     {
         Poker_gameClass->setWindowTitle(QCoreApplication::translate("Poker_gameClass", "Poker_game", nullptr));
         label->setText(QString());
-        label_2->setText(QCoreApplication::translate("Poker_gameClass", "Probabiliate castig", nullptr));
-        label_3->setText(QCoreApplication::translate("Poker_gameClass", "Probabiliate egal", nullptr));
+        label_2->setText(QCoreApplication::translate("Poker_gameClass", "Winning probability", nullptr));
+        label_3->setText(QCoreApplication::translate("Poker_gameClass", "Tie probability", nullptr));
         label_4->setText(QString());
     } // retranslateUi
 
