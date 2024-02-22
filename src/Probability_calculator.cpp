@@ -49,13 +49,13 @@ void Probability_calculator::calculate(int* hand, int playersNumber)
 		probabilitate_dinamica(playersNumber+1, playersInitialNumber-(playersNumber+1), runda);
 		((Poker_game*)parent)->probability->setText(QString::number(prob*100)+"%", QString::number((prob_egal-prob)*100)+"%", QString::number(prob_egal*100)+"%");
 		if(prob>=(double)1/(playersNumber+1))
-		((Poker_game*)parent)->tip->setText("Pariaza, iar daca da raise, pariaza");
+		((Poker_game*)parent)->tip->setText("Bet, if opponent raises then bet");
 		else
 		{
 			if((prob_egal-prob)/2+prob>= (double)1 / (playersNumber + 1))
-				((Poker_game*)parent)->tip->setText("Check, iar daca da raise, pariaza");
+				((Poker_game*)parent)->tip->setText("Check, if opponent raises then bet");
 			else
-				((Poker_game*)parent)->tip->setText("Check, iar daca da raise, fold");
+				((Poker_game*)parent)->tip->setText("Check, if opponent raises then fold");
 		}
 	}
 	else
