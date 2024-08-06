@@ -1,10 +1,10 @@
-#include "card.hpp"
-#include"Poker_game.hpp"
 #include <QPixmap>
 #include <QPainter>
 #include <iostream>
+#include"Poker_game.hpp"
+#include "Card.hpp"
 
-void card::writeNumber(QPixmap* pixmap,const char* text)
+void Card::writeNumber(QPixmap* pixmap,const char* text)
 {
     // Inițializăm QPainter pentru a desena pe pixmap
     QPainter painter(pixmap);
@@ -36,13 +36,13 @@ void card::writeNumber(QPixmap* pixmap,const char* text)
     painter.end();
 }
 
-card::card(char text[],const char*suit,  QRect geometry,void*parent)
+Card::Card(char text[],const char*suit,  QRect geometry,void*parent)
 {
     this->suit_=std::string(suit);
     this->text_=std::string(text);
-    this->position_in_deck = geometry;
-	state = in_deck;
-    this->parent = ((Poker_game*)parent);
+    position_in_deck_ = geometry;
+	state_ = in_deck;
+    parent_ = ((Poker_game*)parent);
     face = new QPushButton((Poker_game*)parent);
     face->setFocusPolicy(Qt::NoFocus);
     face->setGeometry(geometry);
@@ -54,11 +54,9 @@ card::card(char text[],const char*suit,  QRect geometry,void*parent)
     int newWidth = image.width() + 8 * borderWidth;
     int newHeight = image.height() + 20 * borderWidth;
 
-    // Creăm noul QPixmap cu dimensiunile calculate
     QPixmap borderedPixmap(newWidth, newHeight);
-    borderedPixmap.fill(Qt::white); // Umplem pixmap-ul cu culoarea albă
+    borderedPixmap.fill(Qt::white);
 
-    // Desenăm pixmap-ul original în centrul noului QPixmap
     QPainter painter(&borderedPixmap);
     painter.drawPixmap(4*borderWidth, 10*borderWidth, image);
 
@@ -72,30 +70,25 @@ card::card(char text[],const char*suit,  QRect geometry,void*parent)
     face->show();
     QObject::connect(face, SIGNAL(clicked()), this, SLOT(click_slot()));
 }
-void card::click_slot()
+void Card::click_slot()
 {
-    if (this->state == in_deck)
+    if (state_ == in_deck)
     {
         
         bool entered = false;
-        entered = ((Poker_game*)(this->parent))->table->enter_on_table(this);
+        entered = ((Poker_game*)(parent_))->table->enter_on_table(this);
         if (entered==true)
         {
-            this->state = on_table;
-        //     QFont font;
-        // font.setPointSize(15);
-        // font.setBold(true);
-        // font.setWeight(QFont::Bold);
-        // this->face->setFont(font);
+            state_ = on_table;
         } 
     }
     else
-        if (this->state == on_table)
+        if (state_ == on_table)
         {
             face->setIcon(smallFaceIcon_);
             face->setIconSize(smallFaceIcon_.size());
-            this->state = in_deck;
-            ((Poker_game*)(this->parent))->table->setPosition_off(this->position_on_table);
-                this->face->setGeometry(this->position_in_deck);
+            state_ = in_deck;
+            ((Poker_game*)(parent_))->table->setPosition_off(this->position_on_table);
+                this->face->setGeometry(position_in_deck_);
         }
 }

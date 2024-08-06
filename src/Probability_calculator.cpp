@@ -12,47 +12,46 @@
 using namespace std::chrono;
 using namespace std;
 int carte_adversar1, carte_adversar2;
-double prob = 0, prob_egal = 0;
-int tarie(int);
-int carti_disponibile[53];
-int mana_mea[8];
-void probabilitate_dinamica(int, int, int);
-int e_trei_carti(int[]);
-int e_chinta(int[]);
-int e_doua_perechi(int[]);
-int e_pereche(int[]);
-extern str vect[1400];
+double prob = 0, drawProb = 0;
+int strength(int);
+int availableCards[53];
+int myHand[8];
+void dynamicProbability(int, int, int);
+int is_three_of_a_kind(int[]);
+int is_straight(int[]);
+int is_two_pairs(int[]);
+int is_one_pair(int[]);
 #include"Poker_game.hpp"
 int Probability_calculator::playersInitialNumber = 0;
 Probability_calculator::Probability_calculator(void* parent)
 {
 	this->parent = parent;
 }
-void Probability_calculator::calculate(int* hand, int playersNumber)
+void Probability_calculator::calculate(const std::array<int,8>& hand, int playersNumber)
 {
 	if (playersNumber+1 > playersInitialNumber)
 		playersInitialNumber = playersNumber+1;
-	int runda = 0;
+	int round = 0;
 	if (hand[0] == 2 || hand[0] >= 5)
 	{
 		if (hand[0] == 2)
-			runda = 0;
+			round = 0;
 		else
-			runda = hand[0] - 4;
+			round = hand[0] - 4;
 		for (int i = 1; i <= 52; i++)
-			carti_disponibile[i] = 0;
+			availableCards[i] = 0;
 		for (int i = 1; i <= hand[0]; i++)
 		{ 
-			mana_mea[i] = hand[i];
-			carti_disponibile[mana_mea[i]] = 1;
+			myHand[i] = hand[i];
+			availableCards[myHand[i]] = 1;
 		}
-		probabilitate_dinamica(playersNumber+1, playersInitialNumber-(playersNumber+1), runda);
-		((Poker_game*)parent)->probability->setText(QString::number(prob*100)+"%", QString::number((prob_egal-prob)*100)+"%", QString::number(prob_egal*100)+"%");
+		dynamicProbability(playersNumber+1, playersInitialNumber-(playersNumber+1), round);
+		((Poker_game*)parent)->probability->setText(QString::number(prob*100)+"%", QString::number((drawProb-prob)*100)+"%", QString::number(drawProb*100)+"%");
 		if(prob>=(double)1/(playersNumber+1))
 		((Poker_game*)parent)->tip->setText("Bet, if opponent raises then bet");
 		else
 		{
-			if((prob_egal-prob)/2+prob>= (double)1 / (playersNumber + 1))
+			if((drawProb-prob)/2+prob>= (double)1 / (playersNumber + 1))
 				((Poker_game*)parent)->tip->setText("Check, if opponent raises then bet");
 			else
 				((Poker_game*)parent)->tip->setText("Check, if opponent raises then fold");
@@ -64,13 +63,11 @@ void Probability_calculator::calculate(int* hand, int playersNumber)
 			((Poker_game*)parent)->probability->setText("0%","0%","0%");
 			((Poker_game*)parent)->tip->setText("");
 	}
-	delete[] hand;
 }
-int Probability_calculator::sterge = 0;
 
 /////////////////
 
-int e_chinta_de_culoare(int mana_jucator[])
+int is_straight_flush(int mana_jucator[])
 {
 	int i, j, k, l, m;
 	for (i = 3; i >= 1; i--)
@@ -110,7 +107,7 @@ int e_chinta_de_culoare(int mana_jucator[])
 	}
 	return -1;
 }
-int e_careu(int mana_jucator[])
+int is_four_of_a_kind(int mana_jucator[])
 {
 	int a = -1, b = -1;
 	for (int i = 7; i >= 1; i--)
@@ -133,7 +130,7 @@ int e_careu(int mana_jucator[])
 	}
 	return -1;
 }
-int e_full(int mana_jucator[])
+int is_full_house(int mana_jucator[])
 {
 	for (int i = 7; i > 2; i--)
 	{
@@ -152,7 +149,7 @@ int e_full(int mana_jucator[])
 	}
 	return -1;
 }
-int e_culoare(int mana_jucator[])
+int is_flush(int mana_jucator[])
 {
 	int negru = 0, rosu = 0, romb = 0, trefla = 0, cn, cr, cro, ct;
 	for (int i = 7; i >= 1; i--)
@@ -198,7 +195,7 @@ int e_culoare(int mana_jucator[])
 					return ct;
 	return -1;
 }
-int e_chinta(int mana_jucator[])//to fix
+int is_straight(int mana_jucator[])//to fix
 {
 	int i, j, k, l, m;
 	for (i = 3; i >= 1; i--)
@@ -225,7 +222,7 @@ int e_chinta(int mana_jucator[])//to fix
 	}
 	return -1;
 }
-int e_trei_carti(int mana_jucator[])
+int is_three_of_a_kind(int mana_jucator[])
 {
 
 	int a = -1, b = -1, c = -1;
@@ -247,7 +244,7 @@ int e_trei_carti(int mana_jucator[])
 	}
 	return -1;
 }
-int e_doua_perechi(int mana_jucator[])
+int is_two_pairs(int mana_jucator[])
 {
 	int nr = 0, a = 0, b = 0, c = -1;
 	for (int i = 7; i > 1; i--)
@@ -270,7 +267,7 @@ int e_doua_perechi(int mana_jucator[])
 	}
 	return -1;
 }
-int e_pereche(int mana_jucator[])
+int is_one_pair(int mana_jucator[])
 {
 	int a = -1, b = -1, c = -1, d = -1;
 	for (int i = 7; i > 1; i--)
@@ -294,11 +291,11 @@ int e_pereche(int mana_jucator[])
 		return d * 1000000 + a * 10000 + b * 100 + c;
 	return -1;
 }
-int tarie(int p)//daca p=1 calculez taria mainii mele, altfel taria adversarului
+int strength(int p)//daca p=1 calculez taria mainii mele, altfel taria adversarului
 {
 	int mana[8], i, j, a;
 	for (i = 1; i <= 7; i++)
-		mana[i] = mana_mea[i];
+		mana[i] = myHand[i];
 	if (p == 2)
 	{
 		mana[1] = carte_adversar1;
@@ -316,117 +313,115 @@ int tarie(int p)//daca p=1 calculez taria mainii mele, altfel taria adversarului
 	}
 	////////////////////
 	int cont1, cont2, cont3, cont4, cont5, cont7, cont6, cont8;
-	cont8 = e_chinta_de_culoare(mana);
+	cont8 = is_straight_flush(mana);
 	if (cont8 > -1)
 		return 1414282856 + cont8;
 
-	cont7 = e_careu(mana);
+	cont7 = is_four_of_a_kind(mana);
 	if (cont7 > -1)
 		return 1414281442 + cont7;
-	cont6 = e_full(mana);
+	cont6 = is_full_house(mana);
 	if (cont6 > -1)
 	{
 		return  1414280028 + cont6;
 	}
-	cont5 = e_culoare(mana);
+	cont5 = is_flush(mana);
 	if (cont5 > -1) {
 		return 1414280014 + cont5;
 	}
-	cont4 = e_chinta(mana);
+	cont4 = is_straight(mana);
 	if (cont4 > -1)
 		return 1414280000 + cont4;
-	cont3 = e_trei_carti(mana);
+	cont3 = is_three_of_a_kind(mana);
 	if (cont3 > -1)
 		return 1414140000 + cont3;
-	cont2 = e_doua_perechi(mana);
+	cont2 = is_two_pairs(mana);
 	if (cont2 > -1)
 		return 1414000000 + cont2;
-	cont1 = e_pereche(mana);
+	cont1 = is_one_pair(mana);
 	if (cont1 > -1)
 		return 1400000000 + cont1;
 	return ((mana[7] - 1) / 4) * 100000000 + ((mana[6] - 1) / 4) * 1000000 + ((mana[5] - 1) / 4) * 10000 +
 		((mana[4] - 1) / 4) * 100 + ((mana[3] - 1) / 4);
 }
-void probabilitate_dinamica(int nr_jucatori, int nr_jucatori_iesiti, int runda)
+
+void dynamicProbability(int nr_players, int nr_players_out, int round)
 {
-	int V[1500] = {};
 	default_random_engine generator;
 	geometric_distribution<int>distribution(0.01);
-	int p[6] = {};
+	int handsOfPlayersOut[6] = {};
 	srand(static_cast<unsigned int>(time(0)));
-	int i = 1, j = 1, nr_meciuri = 100000, t1, t2;//1000000
+	int i = 1, j = 1, nr_games = 100000, t1, t2;//1000000
 	double old_prob = 2;
-	prob = 0, prob_egal = 0;
-	while (i <= nr_meciuri)
+	prob = 0, drawProb = 0;
+	while (i <= nr_games)
 	{
-		for (int qq = 1; qq <= nr_jucatori_iesiti; qq++)
+		for (int qq = 1; qq <= nr_players_out; qq++)
 		{
 			do {
-				p[qq] = distribution(generator) + 1;
-			} while (p[qq] > 1326 || carti_disponibile[vect[p[qq]].i] == 1 || carti_disponibile[vect[p[qq]].j] == 1);
-			carti_disponibile[vect[p[qq]].i] = 1;
-			carti_disponibile[vect[p[qq]].j] = 1;
-			V[p[qq]]++;
+				handsOfPlayersOut[qq] = rand() % 52 + 1;
+			} while (availableCards[handsOfPlayersOut[qq]] == 1);
+			availableCards[handsOfPlayersOut[qq]] = 1;
 		}
 
-		if (runda == 0)
+		if (round == 0)
 		{
 			do {
-				mana_mea[3] = rand() % 52 + 1;
-			} while (carti_disponibile[mana_mea[3]] == 1);
-			carti_disponibile[mana_mea[3]] = 1;
+				myHand[3] = rand() % 52 + 1;
+			} while (availableCards[myHand[3]] == 1);
+			availableCards[myHand[3]] = 1;
 			do {
-				mana_mea[4] = rand() % 52 + 1;
-			} while (carti_disponibile[mana_mea[4]] == 1);
-			carti_disponibile[mana_mea[4]] = 1;
+				myHand[4] = rand() % 52 + 1;
+			} while (availableCards[myHand[4]] == 1);
+			availableCards[myHand[4]] = 1;
 			do {
-				mana_mea[5] = rand() % 52 + 1;
-			} while (carti_disponibile[mana_mea[5]] == 1);
-			carti_disponibile[mana_mea[5]] = 1;
+				myHand[5] = rand() % 52 + 1;
+			} while (availableCards[myHand[5]] == 1);
+			availableCards[myHand[5]] = 1;
 			do {
-				mana_mea[6] = rand() % 52 + 1;
-			} while (carti_disponibile[mana_mea[6]] == 1);
-			carti_disponibile[mana_mea[6]] = 1;
+				myHand[6] = rand() % 52 + 1;
+			} while (availableCards[myHand[6]] == 1);
+			availableCards[myHand[6]] = 1;
 			do {
-				mana_mea[7] = rand() % 52 + 1;
-			} while (carti_disponibile[mana_mea[7]] == 1);
-			carti_disponibile[mana_mea[7]] = 1;
+				myHand[7] = rand() % 52 + 1;
+			} while (availableCards[myHand[7]] == 1);
+			availableCards[myHand[7]] = 1;
 		}
 		else
-			if (runda == 1)
+			if (round == 1)
 			{
 				do {
-					mana_mea[6] = rand() % 52 + 1;
-				} while (carti_disponibile[mana_mea[6]] == 1);
-				carti_disponibile[mana_mea[6]] = 1;
+					myHand[6] = rand() % 52 + 1;
+				} while (availableCards[myHand[6]] == 1);
+				availableCards[myHand[6]] = 1;
 				do {
-					mana_mea[7] = rand() % 52 + 1;
-				} while (carti_disponibile[mana_mea[7]] == 1);
-				carti_disponibile[mana_mea[7]] = 1;
+					myHand[7] = rand() % 52 + 1;
+				} while (availableCards[myHand[7]] == 1);
+				availableCards[myHand[7]] = 1;
 			}
 			else
-				if (runda == 2)
+				if (round == 2)
 				{
 					do {
-						mana_mea[7] = rand() % 52 + 1;
-					} while (carti_disponibile[mana_mea[7]] == 1);
-					carti_disponibile[mana_mea[7]] = 1;
+						myHand[7] = rand() % 52 + 1;
+					} while (availableCards[myHand[7]] == 1);
+					availableCards[myHand[7]] = 1;
 				}
 		int q = 1;
-		t1 = tarie(1);
-		for (int Z = 1; Z < nr_jucatori; Z++)
+		t1 = strength(1);
+		for (int Z = 1; Z < nr_players; Z++)
 		{
 			do {
 				carte_adversar1 = rand() % 52 + 1;
-			} while (carti_disponibile[carte_adversar1] == 1);
-			carti_disponibile[carte_adversar1] = 1;
+			} while (availableCards[carte_adversar1] == 1);
+			availableCards[carte_adversar1] = 1;
 			do {
 				carte_adversar2 = rand() % 52 + 1;
-			} while (carti_disponibile[carte_adversar2] == 1);
-			carti_disponibile[carte_adversar2] = 1;
-			t2 = tarie(2);
-			carti_disponibile[carte_adversar1] = 0;
-			carti_disponibile[carte_adversar2] = 0;
+			} while (availableCards[carte_adversar2] == 1);
+			availableCards[carte_adversar2] = 1;
+			t2 = strength(2);
+			availableCards[carte_adversar1] = 0;
+			availableCards[carte_adversar2] = 0;
 			if (t1 == t2)
 				q = 0;
 			else
@@ -440,12 +435,12 @@ void probabilitate_dinamica(int nr_jucatori, int nr_jucatori_iesiti, int runda)
 		if (q == 1)
 		{
 			prob++;
-			prob_egal++;
+			drawProb++;
 		}
 		else
 			if (q == 0)
 			{
-				prob_egal++;
+				drawProb++;
 			}
 		double aux = old_prob - (prob / j);
 		if (aux < 0)
@@ -456,33 +451,33 @@ void probabilitate_dinamica(int nr_jucatori, int nr_jucatori_iesiti, int runda)
 			i = 1;
 		old_prob = prob / j;
 		j++;
-		if (runda == 0)
+		if (round == 0)
 		{
-			carti_disponibile[mana_mea[3]] = 0;
-			carti_disponibile[mana_mea[4]] = 0;
-			carti_disponibile[mana_mea[5]] = 0;
-			carti_disponibile[mana_mea[6]] = 0;
-			carti_disponibile[mana_mea[7]] = 0;
+			availableCards[myHand[3]] = 0;
+			availableCards[myHand[4]] = 0;
+			availableCards[myHand[5]] = 0;
+			availableCards[myHand[6]] = 0;
+			availableCards[myHand[7]] = 0;
 		}
 		else
-			if (runda == 1)
+			if (round == 1)
 			{
-				carti_disponibile[mana_mea[6]] = 0;
-				carti_disponibile[mana_mea[7]] = 0;
+				availableCards[myHand[6]] = 0;
+				availableCards[myHand[7]] = 0;
 			}
 			else
-				if (runda == 2)
+				if (round == 2)
 				{
-					carti_disponibile[mana_mea[7]] = 0;
+					availableCards[myHand[7]] = 0;
 				}
-		for (int qq = 1; qq <= nr_jucatori_iesiti; qq++)
+		for (int qq = 1; qq <= nr_players_out; qq++)
 		{
-			carti_disponibile[vect[p[qq]].i] = 0;
-			carti_disponibile[vect[p[qq]].j] = 0;
+			availableCards[handsOfPlayersOut[qq]] = 0;
+			availableCards[handsOfPlayersOut[qq]] = 0;
 		}
 		if (j > 18446744073709551614)
 			break;
 	}
 	prob /= ((double)j - 1);
-	prob_egal /= ((double)j - 1);
+	drawProb /= ((double)j - 1);
 }

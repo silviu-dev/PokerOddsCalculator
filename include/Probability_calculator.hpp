@@ -1,9 +1,11 @@
 #pragma once
+#include <array>
+
 class Probability_calculator
 {
-public: void calculate(int* hand, int playersNumber);
+public: 
 	  Probability_calculator(void* parent);
-	  static int sterge;
+	  void calculate(const std::array<int,8>& hand, int playersNumber);
 	  static int playersInitialNumber;
 private:
 	void* parent;

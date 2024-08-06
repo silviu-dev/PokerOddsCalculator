@@ -1,18 +1,20 @@
 #pragma once
 #include<qrect.h>
-#include"card.hpp"
+#include <array>
+#include"Card.hpp"
+
 class Table :public QWidget
 {
 	Q_OBJECT
 public:
 	Table(QRect start, void *parent);
-	bool enter_on_table(card*);
+	bool enter_on_table(Card*);
 	void setPosition_off(int);
-	int* get_hand();
+	std::array<int,8> get_hand();
 public slots:
 	void reset_table();
 private:
-	void* parent;
-	QRect start_position;
-	card *positions[9];
+	void* parent_;
+	QRect start_position_;
+	Card *positions[9];
 };

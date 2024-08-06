@@ -4,9 +4,9 @@ class Probability
 {
 public:
 	Probability(QRect geometry, void* parent);
-	void setText(QString casting, QString egal, QString cumulat);
+	void setText(QString win, QString draw, QString cummulative);
 private:
-	QLabel* pCastig;
-	QLabel* pEgal;
-	QLabel* pCumulat;
+	QLabel* pWin_;
+	QLabel* pDraw_;
+	QLabel* pCummulated_;
 };

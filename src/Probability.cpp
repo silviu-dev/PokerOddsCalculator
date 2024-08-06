@@ -4,22 +4,22 @@ Probability::Probability(QRect geometry, void* parent)
 	QFont font;
 	font.setFamily(QString::fromUtf8("Times New Roman"));
 	font.setPointSize(14);
-	this->pCastig = new QLabel((QWidget*)parent);
-	this->pCastig->setGeometry(geometry);
-	this->pCastig->setFont(font);
-	this->pCastig->setText("0%");
-	this->pEgal = new QLabel((QWidget*)parent);
-	this->pEgal->setGeometry(*(new QRect(geometry.x()+200,geometry.y(),geometry.width(),geometry.height())));
-	this->pEgal->setFont(font);
-	this->pEgal->setText("0%");
-	this->pCumulat = new QLabel((QWidget*)parent);
-	this->pCumulat->setGeometry(*(new QRect(geometry.x() + 100, geometry.y()+30, geometry.width(), geometry.height())));
-	this->pCumulat->setFont(font);
-	this->pCumulat->setText("0%");
+	this->pWin_ = new QLabel((QWidget*)parent);
+	this->pWin_->setGeometry(geometry);
+	this->pWin_->setFont(font);
+	this->pWin_->setText("0%");
+	this->pDraw_ = new QLabel((QWidget*)parent);
+	this->pDraw_->setGeometry(*(new QRect(geometry.x()+200,geometry.y(),geometry.width(),geometry.height())));
+	this->pDraw_->setFont(font);
+	this->pDraw_->setText("0%");
+	this->pCummulated_ = new QLabel((QWidget*)parent);
+	this->pCummulated_->setGeometry(*(new QRect(geometry.x() + 100, geometry.y()+30, geometry.width(), geometry.height())));
+	this->pCummulated_->setFont(font);
+	this->pCummulated_->setText("0%");
 }
-void Probability::setText(QString casting, QString egal, QString cumulat)
+void Probability::setText(QString win, QString draw, QString cummulative)
 {
-	pCastig->setText(casting);
-	pEgal->setText(egal);
-	pCumulat->setText(cumulat);
+	pWin_->setText(win);
+	pDraw_->setText(draw);
+	pCummulated_->setText(cummulative);
 }

@@ -1,5 +1,4 @@
 #include "Poker_game.hpp"
-#include"opponents.hpp"
 #include<qevent.h>
 #include<cstring>
 #include <iostream>
@@ -8,7 +7,7 @@ Poker_game::Poker_game(QWidget *parent)
 {
    table = new Table(QRect(56, 250, 65, 95),this);
    ui.setupUi(this); 
-   opp = new opponents(ui.centralWidget,this);
+   opp = new Opponents(ui.centralWidget,this);
    create_cards(this);
    probability = new Probability(QRect(540, 325, 141, 21), ui.centralWidget);
    tip = new QLabel(ui.centralWidget);
@@ -25,7 +24,7 @@ Poker_game::Poker_game(QWidget *parent)
 void Poker_game::keyPressEvent(QKeyEvent* k)
 {
     if (k->key() == Qt::Key_Up || k->key() == Qt::Key_Down)
-        opp->slot(k);
+        opp->handleEvent(k);
     else
         if (k->key() == Qt::Key_Space)
             table->reset_table();
@@ -175,7 +174,7 @@ void create_cards(Poker_game *parent)
                                 }
             }
         }
-                            parent->cards[i] = new card(aux, image, *position,parent);
+                            parent->cards[i] = new Card(aux, image, *position,parent);
                             parent->cards[i]->position_in_deck_int = i;
                             delete position;
     }

@@ -3,9 +3,9 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_Poker_game.hpp"
 #include<qpushbutton.h>
-#include"opponents.hpp"
-#include"card.hpp"
-#include"table.hpp"
+#include"Opponents.hpp"
+#include"Card.hpp"
+#include"Table.hpp"
 #include"Probability.hpp"
 #include"Probability_calculator.hpp"
 class Poker_game : public QMainWindow
@@ -14,8 +14,8 @@ class Poker_game : public QMainWindow
 public:
     Probability_calculator* probability_calculator;
     Poker_game(QWidget *parent = Q_NULLPTR);
-    opponents *opp;
-    card* cards[53];
+    Opponents *opp;
+    Card* cards[53];
     void keyPressEvent(QKeyEvent* k);
     Table* table;
     Probability* probability;
